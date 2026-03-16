@@ -1,0 +1,2468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta name="description" content="Gaetano Hamilton — Mechanical Engineering & Design student at RPI. Product design, fabrication, and engineering projects.">
+  <meta property="og:title" content="Gaetano Hamilton — Portfolio">
+  <meta property="og:description" content="Mechanical Engineering & Industrial Design student at RPI.">
+  <meta property="og:image" content="https://gaetanohamilton.pages.dev/cover.jpg">
+  <meta name="author" content="Gaetano Hamilton">
+  <meta property="og:url" content="https://gaetanohamilton.pages.dev">
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gaetano Hamilton — Portfolio</title>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:           #f5eedb;   /*    F0e5c7*/
+      --light:        #f5eedb;
+      --fg:           #302b23; /*     473F34;  */
+      --muted:        #7d864e ; /*8c9657    6D8196 888880;*/
+      --border:       #473F34;
+      --modal-bg:     #f5eedb;
+      --red:          #473F34;  
+      --mouse:        #FF802E;
+      --flame:        #E8510A;  /* rocket engine flame — change this to restyle */
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-hero:    'Bebas Neue', sans-serif; /* ← change this to swap just the big hero/section titles */
+      --font-mono:    'DM Mono', monospace;
+      --font-body:    'DM Mono', monospace;     /*'DM Sans', sans-serif;*/
+      --nav-h:        52px;
+      --gap:          clamp(1rem, 2vw, 2rem);
+      --base-font-size: clamp(17px, 2vw, 25px); /* ← adjust site-wide font size here */
+    }
+
+    /* ── DARK MODE ─────────────────────────────────────────────── */
+    body.dark-mode {
+      --bg:       #302b23;
+      --light:    #F0e5c7;
+      --fg:       #F0e5c7;
+      --muted:    #8c9657;
+      --border:   #F0e5c7;
+      --modal-bg: #302b23;
+      --red:      #F0e5c7;
+
+      --dim-color:        #FF802E;
+      --dim-bg:           #302b23;
+      --dim-size:         8.5px;
+      --dim-opacity:      0.75;
+      --dim-label-opacity: 0.95;  /* label pill background opacity — tune independently */
+
+    }
+
+
+    body.dark-mode #modal { background: var(--modal-bg); }
+    body.dark-mode .modal-bar { background: var(--modal-bg); }
+    body.dark-mode .modal-desc { color: #aaa; }
+    body.dark-mode .hero-bg { background: var(--bg); }
+  /*  body.dark-mode .hero-bg::after { background: linear-gradient(to top, rgba(17,17,17,0.75) 0%, transparent 55%); } */
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scrollbar-width: none; }
+    html::-webkit-scrollbar { display: none; }
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: var(--base-font-size);
+      line-height: 1.65;
+      overflow-x: hidden;
+      cursor: none;
+    }
+    body.modal-open { overflow: hidden; }
+
+    /* ── PAGE RULER ─────────────────────────────────────────────── */
+    #page-ruler {
+      position: fixed;
+      right: 0; top: 0;
+      width: 20px;
+      height: 100vh;
+      z-index: 5000;
+      overflow: hidden;
+      transition: opacity 0.2s ease;
+    }
+    #page-ruler.hidden { opacity: 0; pointer-events: none; }
+    #page-ruler canvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    #page-ruler-block {
+      position: absolute;
+      right: 0;
+      width: 20px;
+      background: var(--muted);
+      color: var(--bg);
+      font-family: 'DM Mono', monospace;
+      font-size: 6px;
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      writing-mode: vertical-rl;
+      white-space: nowrap;
+      cursor: grab;
+      transition: top 0.05s linear;
+      padding: 3px 0;
+      min-height: 24px;
+      user-select: none;
+      z-index: 1;
+    }
+    #page-ruler-block:active { cursor: grabbing; }
+
+    /* ── MODAL RULER ────────────────────────────────────────────── */
+    .modal-body {
+      display: grid; grid-template-columns: 1fr 20px 360px 20px;
+      height: calc(100vh - var(--nav-h)); overflow: hidden;
+    }
+    #modal-ruler {
+      position: relative;
+      height: 100%;
+      overflow: hidden;
+      border-left: none;
+      border-right: 1px solid var(--border);
+      background: var(--bg);
+    }
+    #modal-ruler canvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    #modal-ruler-block {
+      position: absolute;
+      left: 0; right: 0;
+      background: var(--muted);
+      color: var(--bg);
+      font-family: 'DM Mono', monospace;
+      font-size: 6px;
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      writing-mode: vertical-rl;
+      white-space: nowrap;
+      cursor: grab;
+      transition: top 0.05s linear;
+      padding: 3px 0;
+      min-height: 24px;
+      user-select: none;
+      z-index: 1;
+    }
+    #modal-ruler-block:active { cursor: grabbing; }
+    #modal-info-ruler {
+      position: relative;
+      height: 100%;
+      overflow: hidden;
+      border-left: 1px solid var(--border);
+      background: var(--bg);
+    }
+    #modal-info-ruler canvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    #modal-info-ruler-block {
+      position: absolute;
+      left: 0; right: 0;
+      background: var(--muted);
+      color: var(--bg);
+      font-family: 'DM Mono', monospace;
+      font-size: 6px;
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      writing-mode: vertical-rl;
+      white-space: nowrap;
+      cursor: grab;
+      transition: top 0.05s linear;
+      padding: 3px 0;
+      min-height: 24px;
+      user-select: none;
+      z-index: 1;
+    }
+    #modal-info-ruler-block:active { cursor: grabbing; }
+    /* ── END RULER ──────────────────────────────────────────────── */
+
+    /* ── LIGHTBOX ───────────────────────────────────────────────── */
+    #lightbox {
+      display: none;
+      position: fixed; inset: 0;
+      z-index: 20000;
+      background: rgba(0,0,0,0.92);
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+    #lightbox.open { display: flex; }
+
+    #lightbox-img {
+      max-width: calc(100vw - 120px);
+      max-height: calc(100vh - 100px);
+      object-fit: contain;
+      display: block;
+      user-select: none;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    /* Prev / Next arrows */
+    .lb-arrow {
+      position: fixed;
+      top: 50%; transform: translateY(-50%);
+      background: none; border: none;
+      color: var(--muted); 
+      font-family: var(--font-mono);
+      font-size: 1.4rem;
+      padding: 1rem 1.2rem;
+      cursor: none;
+      transition: color 0.15s;
+      z-index: 20001;
+      line-height: 1;
+    }
+    .lb-arrow:hover { color: #fff; }
+    #lb-prev { left: 0; }
+    #lb-next { right: 0; }
+    .lb-arrow.hidden { opacity: 0; pointer-events: none; }
+
+    /* Close button */
+    #lb-close {
+      position: fixed;
+      top: 16px; right: 20px;
+      background: none; border: none;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      cursor: none;
+      padding: 6px 10px;
+      transition: color 0.15s;
+      z-index: 20001;
+    }
+    #lb-close:hover { color: #fff; }
+
+    /* Counter e.g. "2 / 5" */
+    #lb-counter {
+      position: fixed;
+      bottom: 20px; left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.18em;
+      color: rgba(255,255,255,0.4);
+      pointer-events: none;
+      z-index: 20001;
+    }
+
+    /* Hint shown only on first open */
+    #lb-hint {
+      position: fixed;
+      bottom: 44px; left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.14em;
+      color: rgba(255,255,255,0.28);
+      pointer-events: none;
+      z-index: 20001;
+      white-space: nowrap;
+      transition: opacity 0.6s;
+    }
+    #lb-hint.fade { opacity: 0; }
+
+    /* Images in modal become clickable */
+    .modal-img-block img { cursor: none; }
+    /* ── END LIGHTBOX ────────────────────────────────────────────── */
+    a { color: inherit; text-decoration: none; }
+    a, button, input, textarea, .portfolio-item { cursor: none; }
+
+    /* ── CUSTOM CURSOR ─────────────────────────────────────────── */
+    #cursor {
+      position: fixed;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      pointer-events: none;
+      left: -100px; top: -100px;
+      transform: translate(-50%, -50%);
+      transition: width 0.18s ease, height 0.18s ease,
+                  background 0.3s ease, border-color 0.3s ease;
+      z-index: 99999;
+      background: var(--mouse);
+      border: 1.5px solid transparent;
+    }
+    /* Light mode (default — dark pages) */
+    #cursor.light {
+      background: #fff;
+      border-color: transparent;
+    }
+    /* Hover ring state */
+    #cursor.hover {
+      width: 30px; height: 30px;
+      background: transparent;
+      border-color: var(--mouse);
+    }
+    #cursor.hover.light {
+      background: transparent;
+      border-color: #fff;
+    }
+
+    /* ── GRAIN ─────────────────────────────────────────────────── */
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9000;
+    }
+
+    /* ── NAV ───────────────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      height: var(--nav-h);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 clamp(1.5rem, 3vw, 3rem);
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      z-index: 200;
+    }
+
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      font-family: var(--font-mono); font-size: 0.7rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--muted); transition: color 0.2s; position: relative;
+    }
+    .nav-links a::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px; background: var(--fg); transition: width 0.25s ease; }
+    .nav-links a:hover { color: var(--fg); }
+    .nav-links a:hover::after { width: 100%; }
+    /* Active section indicator */
+    .nav-links a.active { color: var(--red); }
+    .nav-links a.active::after { width: 100%; background: var(--red); }
+
+    /* ── DARK MODE TOGGLE ──────────────────────────────────────── */
+    #dark-toggle {
+      background: var(--muted); border: none;
+      width: 48px; height: 24px; border-radius: 999px;
+      position: relative; flex-shrink: 0;
+      transition: background 0.3s ease;
+    }
+    #dark-toggle .toggle-thumb {
+      position: absolute; top: 4px;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: var(--light);
+      transition: left 0.5s ease;
+      left: 4px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    body.dark-mode #dark-toggle .toggle-thumb { left: 28px; }
+    #dark-toggle .toggle-icon {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      transition: opacity .1s;
+      display: flex; align-items: center; justify-content: center;
+      pointer-events: none;
+      z-index: 1;
+    }
+    #dark-toggle .icon-sun  { left: 6px; opacity: 1; }
+    #dark-toggle .icon-moon { right: 6px; opacity: 0; }
+    body.dark-mode #dark-toggle .icon-sun  { opacity: 0; }
+    body.dark-mode #dark-toggle .icon-moon { opacity: 1; }
+
+    /* ── NAV LOGO — GAETANO text fades in when hero scrolls away ── */
+    /*   Tune: font-size, color, letter-spacing                      */
+    .nav-logo {
+      font-family: var(--font-hero);
+      font-size: 1.15rem;
+      letter-spacing: 0.06em;
+      color: var(--red);
+      display: block; flex-shrink: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .nav-logo:hover { color: var(--muted); }
+    /* ── MODAL BAR LOGO ────────────────────────────────────────── */
+        .modal-logo {
+      font-family: var(--font-hero);
+      font-size: 1.15rem;
+      letter-spacing: 0.06em;
+      color: var(--red);
+      text-decoration: none;
+      flex-shrink: 0;
+      transition: opacity 0.2s ease;
+    }
+    .modal-logo:hover { color: var(--muted); }
+    .modal-bar-center {
+      position: absolute; left: 50%; transform: translateX(-50%);
+      font-family: var(--font-mono); font-size: 0.7rem;
+      letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted);
+    }
+
+    /* ── HERO ──────────────────────────────────────────────────── */
+    .hero-layout { position: relative; z-index: 100; width: 100%; }
+    #hero {
+      min-height: 100svh; display: flex; flex-direction: column;
+      justify-content: center;
+      padding: calc(var(--nav-h) + 2rem) clamp(1.5rem, 6vw, 6rem) clamp(3rem, 6vw, 5rem);
+      position: relative; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background: var(--bg);
+    }
+  /*  .hero-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(245,243,238,0.65) 0%, transparent 55%); } */
+
+    /* Two-column layout: name left, bio right */
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: clamp(2rem, 4vw, 6rem);
+      align-items: start;
+    }
+    .hero-left {}
+    .hero-label {
+      font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 1.2rem;
+      opacity: 0; transform: translateY(12px); animation: fadeUp 0.7s 0.3s ease forwards;
+    }
+    .hero-title {
+      font-family: var(--font-hero); font-size: clamp(3.5rem, 8vw, 10rem);
+      line-height: 0.92; letter-spacing: 0.02em;
+      opacity: 0; transform: translateY(20px); animation: fadeUp 0.8s 0.5s ease forwards;
+    }
+    /* GAETANO in blue — fades out as you scroll away */
+    /* Tune color here: ↓ */
+    .hero-first-name { color: var(--red); display: inline-block; }
+    .hero-title em { font-style: normal; color: var(--muted); }
+
+    /* Right column — bio, links, tags, stats */
+    .hero-right {
+      display: flex; flex-direction: column; gap: 1.5rem;
+      opacity: 0; transform: translateY(16px); animation: fadeUp 0.8s 0.7s ease forwards;
+      padding-bottom: 0.5rem;
+    }
+    .hero-sub {
+      font-family: var(--font-mono); font-size: 0.75rem;
+      letter-spacing: 0.08em; color: var(--muted); line-height: 1.9;
+    }
+    .hero-about-links { display: flex; flex-direction: column; gap: 0.45rem; }
+    .hero-about-link {
+      font-family: var(--font-mono); font-size: 0.68rem;
+      letter-spacing: 0.12em; color: var(--fg);
+      transition: color 0.2s; display: flex; align-items: center; gap: 0.6rem;
+    }
+    .hero-about-link::before { content: '→'; }
+    .hero-about-link:hover { color: var(--muted); }
+    .hero-about-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .hero-about-tag {
+      font-family: var(--font-mono); font-size: 0.6rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      border: 1px solid var(--muted); padding: 0.3rem 0.75rem;
+      color: var(--muted); transition: border-color 0.2s, color 0.2s;
+    }
+    .hero-about-tag:hover { border-color: var(--muted); color: var(--fg); }
+    .dim-hint {
+      font-family: var(--font-mono); font-size: 0.55rem;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--muted); opacity: 0.5;
+      margin-top: 1rem;
+    }
+    .dim-hint kbd {
+      font-family: var(--font-mono);
+      border: 1px solid var(--muted);
+      border-radius: 2px;
+      padding: 0 3px;
+      font-size: 0.55rem;
+    }
+    body.dark-mode .dim-hint { opacity: 0.4; }
+    .hero-scroll {
+      position: absolute; bottom: clamp(2rem,4vw,4rem); right: clamp(1.5rem,3vw,3rem);
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+      font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--muted); writing-mode: vertical-rl;
+      opacity: 0; animation: fadeIn 1s 1.2s ease forwards;
+    }
+    .hero-scroll::before { content: ''; width: 1px; height: 40px; background: var(--muted); animation: scrollLine 1.5s 1.5s ease infinite; }
+    @keyframes scrollLine { 0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom} }
+
+    /* ── SECTIONS ──────────────────────────────────────────────── */
+    section {
+      padding-top:    clamp(2rem, 4vw, 3rem);  /* ← reduce this */
+      padding-bottom: clamp(5rem, 10vw, 10rem);
+      padding-left:   clamp(1.5rem, 3vw, 3rem);
+      padding-right:  clamp(1.5rem, 3vw, 3rem);
+    }
+    .section-header { display: flex; align-items: baseline; gap: 1.5rem; margin-bottom: clamp(3rem, 6vw, 6rem); border-top: 1px solid var(--border); padding-top: 1.5rem; }
+    .section-number { font-family: var(--font-mono); font-size: 0.65rem; color: var(--muted); letter-spacing: 0.15em; }
+    .section-title { font-family: var(--font-hero); font-size: clamp(2.5rem, 5vw, 5rem); letter-spacing: 0.04em; line-height: 1; }
+
+    /* ─ */
+
+    /* ── PORTFOLIO GRID ────────────────────────────────────────── */
+    #work { background: var(--bg); }
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+      gap: var(--gap);
+    }
+    .portfolio-item { display: block; position: relative; }
+    .portfolio-item .thumb {
+      aspect-ratio: 4/3; overflow: hidden;
+      background: var(--border); position: relative;
+    }
+    .portfolio-item .thumb img,
+    .portfolio-item .thumb .thumb-placeholder {
+      width: 100%; height: 100%; display: block; object-fit: cover;
+      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .portfolio-item:hover .thumb img,
+    .portfolio-item:hover .thumb .thumb-placeholder { transform: scale(1.04); }
+    .thumb-placeholder { width: 100%; height: 100%; }
+    .item-info { padding: 0.85rem 0 0.2rem; display: flex; justify-content: space-between; align-items: baseline; }
+    .item-name { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--red); }
+    .item-tag  { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.1em; color: var(--red); }
+    .item-desc { font-size: 0.78rem; color: var(--muted); margin-top: 0.2rem; line-height: 1.5; }
+
+    /* ── PROJECT MODAL ─────────────────────────────────────────── */
+    #modal {
+      position: fixed; inset: 0;
+      background: var(--modal-bg); z-index: 1000;
+      display: flex; flex-direction: column;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.35s ease;
+      overflow: hidden;
+    }
+    #modal.open { opacity: 1; pointer-events: all; }
+    .modal-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 clamp(1.5rem, 3vw, 3rem);
+      height: var(--nav-h); flex-shrink: 0; position: relative;
+      border-bottom: 1px solid var(--border); background: var(--modal-bg); z-index: 10;
+    }
+    .modal-bar-title { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+    #modal-close {
+      width: 44px; height: 44px;
+      background: var(--red); color: var(--bg); border: none;
+      font-family: var(--font-display); font-size: 1.6rem; letter-spacing: 0;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: opacity 0.2s;
+    }
+    #modal-close:hover { background: var(--muted); }
+    /* modal-body grid defined in ruler section above */
+    .modal-images {
+      overflow-y: auto;
+      scrollbar-width: none;
+      padding: clamp(2rem, 4vw, 4rem);
+      display: flex; flex-direction: column; gap: 1.5rem;
+      
+    }
+    .modal-images::-webkit-scrollbar { display: none; }
+    .modal-info::-webkit-scrollbar { display: none; }
+    .modal-img-block { width: 100%; flex-shrink: 0; overflow: hidden; background: #fff; }
+    .modal-img-block.main  { aspect-ratio: 2/1.2; }
+    .modal-img-block.extra { aspect-ratio: 2/1.1; }
+    .modal-img-block img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .modal-img-block .ph  { width: 100%; height: 100%; display: block; }
+    .modal-info {
+      padding: clamp(2rem, 4vw, 4rem) clamp(1.5rem, 3vw, 2.5rem);
+      display: flex; flex-direction: column; gap: 1.75rem; overflow-y: auto; scrollbar-width: none;
+    }
+    .modal-project-title { font-family: var(--font-display); font-size: clamp(2.5rem, 4vw, 4rem); letter-spacing: 0.03em; line-height: 0.95; }
+    .modal-tag { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+    .modal-desc { font-size: 0.88rem; line-height: 1.9; color: var(--fg); }
+    .modal-meta { border-top: 1px solid var(--border); padding-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
+    .modal-meta-row { display: flex; justify-content: space-between; align-items: baseline; text-align: right;}
+    .modal-meta-label { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+    .modal-meta-value { font-family: var(--font-mono); font-size: 0.68rem; }
+    .modal-nav-row { margin-top: auto; padding-top: 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; }
+    .modal-nav-btn { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); background: none; border: none; transition: color 0.2s; }
+    .modal-nav-btn:hover { color: var(--fg); }
+
+    /* ── ABOUT section CSS kept for reference but section removed ── */
+
+    /* ── CONTACT ───────────────────────────────────────────────── */
+    #contact { background: var(--bg); }
+    .contact-inner { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(3rem,6vw,8rem); align-items: start; }
+    .contact-heading { font-family: var(--font-hero); font-size: clamp(3rem,7vw,8rem); letter-spacing: 0.03em; line-height: 0.9; margin-bottom: 2rem; }
+    .contact-note { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); line-height: 1.8; max-width: 340px; }
+    .contact-links { margin-top: 3rem; display: flex; flex-direction: column; gap: 0.75rem; }
+    .contact-link { display: flex; align-items: center; gap: 1rem; font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.12em; color: var(--muted); transition: color 0.2s; }
+    .contact-link:hover { color: var(--fg); }
+    .contact-link::before { content: '→'; font-size: 0.8rem; }
+    .contact-form { padding-top: 0.5rem; }
+    .form-row { margin-bottom: 1.8rem; }
+    .form-row label { display: block; font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.6rem; }
+    .form-row input, .form-row textarea { width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--border); padding: 0.5rem 0 0.75rem; font-family: var(--font-body); font-size: 0.9rem; color: var(--fg); outline: none; transition: border-color 0.2s; resize: none; }
+    .form-row input:focus, .form-row textarea:focus { border-color: var(--fg); }
+    .form-row textarea { min-height: 100px; }
+    .btn-submit { display: inline-flex; align-items: center; gap: 0.75rem; font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; background: var(--fg); color: var(--bg); border: none; padding: 1rem 2rem; transition: opacity 0.2s; margin-top: 0.5rem; }
+    .btn-submit:hover { opacity: 0.75; }
+    .btn-submit .arrow { transition: transform 0.2s; }
+    .btn-submit:hover .arrow { transform: translateX(4px); }
+
+    /* ── FOOTER ────────────────────────────────────────────────── */
+    footer { padding: 2rem clamp(1.5rem,3vw,3rem); border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .footer-left { display: flex; flex-direction: column; gap: 0.55rem; }
+    .footer-copy { font-family: var(--font-mono); font-size: 0.62rem; color: var(--muted); letter-spacing: 0.1em; }
+    /* ── ROCKET BUTTON ─────────────────────────────────────────── */
+    #rocket-btn {
+      background: none; border: none; padding: 0;
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      position: relative;
+      cursor: none;
+    }
+    #rocket-btn .rocket-label {
+      font-family: var(--font-mono); font-size: 0.62rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--muted); transition: color 0.2s; opacity: 1;
+    }
+    #rocket-btn:hover .rocket-label { color: var(--fg); }
+    #rocket-btn svg { overflow: visible; }
+    #rocket-inner {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      transform-origin: center bottom;
+      will-change: transform;
+    }
+    #rocket-btn:not(.launching):not(.blasting):hover #rocket-inner {
+      animation: rocket-bob 1.6s ease-in-out infinite;
+    }
+    @keyframes rocket-bob {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-4px); }
+    }
+    /* Hover rumble — looping pre-ignition shake + flame */
+    #rocket-btn.hovering:not(.launching):not(.blasting) #rocket-inner {
+      animation: rocket-rumble 0.25s ease-in-out infinite;
+    }
+    @keyframes rocket-rumble {
+      0%   { transform: translateX(0)    rotate(0deg);  }
+      25%  { transform: translateX(-2px) rotate(-1deg); }
+      75%  { transform: translateX(2px)  rotate(1deg);  }
+      100% { transform: translateX(0)    rotate(0deg);  }
+    }
+    #rocket-btn.hovering #rocket-flame { opacity: 1; }
+    #rocket-btn.launching #rocket-inner {
+      animation: rocket-shake 0.35s ease-in-out forwards;
+    }
+    @keyframes rocket-shake {
+      0%   { transform: translateX(0)    rotate(0deg);  }
+      20%  { transform: translateX(-3px) rotate(-2deg); }
+      40%  { transform: translateX(3px)  rotate(2deg);  }
+      60%  { transform: translateX(-2px) rotate(-1deg); }
+      80%  { transform: translateX(2px)  rotate(1deg);  }
+      100% { transform: translateX(0)    rotate(0deg);  }
+    }
+    #rocket-btn.blasting #rocket-inner {
+      /* inner hides while clone flies — just fade it out immediately */
+      animation: rocket-hide 0.15s ease forwards;
+    }
+    @keyframes rocket-hide {
+      to { opacity: 0; }
+    }
+    /* The flying clone — injected as position:fixed by JS */
+    #rocket-clone {
+      position: fixed;
+      pointer-events: none;
+      z-index: 99998;
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      transform-origin: center bottom;
+      will-change: transform, top;
+      transition: none;
+    }
+    #rocket-clone svg { overflow: visible; }
+    #rocket-clone .rocket-label {
+      font-family: var(--font-mono); font-size: 0.62rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--muted);
+      opacity: 0; /* ghost — visible but transparent while flying */
+    }
+    /* Flame fades off on descent */
+    #rocket-btn.landing #rocket-flame { opacity: 0; }
+    #rocket-flame { transition: opacity 0.1s; opacity: 0; }
+    #rocket-btn.launching #rocket-flame,
+    #rocket-btn.blasting  #rocket-flame { opacity: 1; }
+    .rocket-puff {
+      position: absolute; border-radius: 50%;
+      background: var(--flame); opacity: 0; pointer-events: none;
+      animation: puff-out 0.5s ease-out forwards;
+    }
+    @keyframes puff-out {
+      0%   { transform: scale(0.2) translate(0,0);                             opacity: 0.7; }
+      100% { transform: scale(1.8) translate(var(--px,0px), var(--py,8px));   opacity: 0;   }
+    }
+    /* ── END ROCKET ─────────────────────────────────────────────── */
+
+    @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { to { opacity: 1; } }
+
+    /* ── RESPONSIVE ────────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .modal-body { grid-template-columns: 1fr; height: auto; overflow: visible; }
+      #modal { overflow-y: auto; scrollbar-width: none; }
+      #modal::-webkit-scrollbar { display: none; }
+      #modal-ruler { display: none; }
+      #modal-info-ruler { display: none; }
+      .modal-images { height: auto; overflow: visible; border-right: none; border-bottom: 1px solid var(--border); }
+      .modal-info { overflow: visible; }
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: flex; gap: 1.2rem; }
+      .nav-links a { font-size: 0.6rem; }
+      .hero-inner { grid-template-columns: 1fr; }
+      .contact-inner { grid-template-columns: 1fr; }
+    }
+    @media (hover: none) {
+      #cursor { display: none; }
+      body { cursor: auto; }
+      a, button, input, textarea, .portfolio-item { cursor: auto; }
+    }
+
+
+    /* ══ DIMENSION MODE (press D to toggle) ══════════════════════
+       Tune all visuals here:
+         --dim-color         line / text / border color
+         --dim-bg            label pill background color
+         --dim-size          label font size
+         --dim-opacity       overall opacity of boxes, lines, arrows (0–1)
+         --dim-label-opacity label pill background opacity only (0–1)
+       ══════════════════════════════════════════════════════════ */
+    :root {
+      --dim-color:        #FF802E;
+      --dim-bg:           #F0e5c7;
+      --dim-size:         8.5px;
+      --dim-opacity:      0.75;
+      --dim-label-opacity: 0.95;  /* label pill background opacity — tune independently */
+    }
+    /* Layout highlight boxes — position set by JS (fixed for modal, absolute for page) */
+    .dim-box {
+      pointer-events: none;
+      z-index: 7990;
+      opacity: var(--dim-opacity);
+      box-sizing: border-box;
+    }
+    .dim-box.pad  { background: rgba(0,71,171,0.07); border: 1px dashed var(--dim-color); }
+    .dim-box.elem { background: transparent;          border: 1px dashed; color: var(--dim-color); }
+    /* Dimension lines */
+    /* dim-line replaced by inline SVG with arrowheads */
+    /* Labels */
+    .dim-label {
+      position: fixed;
+      font-family: 'DM Mono', monospace;
+      font-size: var(--dim-size);
+      letter-spacing: 0.04em;
+      color: var(--dim-color);
+      background: var(--dim-bg);
+      border: 1px solid var(--dim-color);
+      padding: 1px 4px;
+      pointer-events: none;
+      z-index: 8000;
+      white-space: nowrap;
+      transform: translate(-50%, -50%);
+      opacity: var(--dim-label-opacity);
+    }
+    /* Toast */
+    #dim-toast {
+      position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
+      font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.2em;
+      text-transform: uppercase; background: var(--fg); color: var(--bg);
+      padding: 0.5rem 1.25rem; opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease; z-index: 9000;
+    }
+    #dim-toast.show { opacity: 1; }
+
+    /* Highlighted box (nearest to cursor) */
+    .dim-box.dim-hot {
+      background: rgba(0,71,171,0.13) !important;
+      border-color: var(--dim-color) !important;
+      border-style: solid !important;
+    }
+    /* CAD crosshair */
+    #dim-crossH, #dim-crossV {
+      display: none; position: fixed;
+      background: var(--dim-color); opacity: 0.1;
+      pointer-events: none; z-index: 8010;
+    }
+    #dim-crossH { height: 1px; left: 0; width: 100vw; }
+    #dim-crossV { width:  1px; top:  0; height: 100vh; }
+    /* Coordinate readout */
+    #dim-coords {
+      display: none; position: fixed;
+      font-family: 'DM Mono', monospace; font-size: var(--dim-size);
+      letter-spacing: 0.06em; color: var(--dim-color);
+      background: none; border: 0px solid var(--dim-color);
+      padding: 2px 6px; pointer-events: none; z-index: 8020;
+      white-space: nowrap; opacity: var(--dim-opacity);
+    }
+    /* ══ END DIMENSION MODE ══════════════════════════════════════ */
+
+    
+  </style>
+</head>
+<body>
+
+  <div id="cursor"></div>
+
+  <!-- ══ PAGE RULER ══ -->
+  <div id="page-ruler">
+    <canvas id="page-ruler-canvas"></canvas>
+    <div id="page-ruler-block">0.0 cm</div>
+  </div>
+  <!-- ══ END PAGE RULER ══ -->
+
+
+
+<!-- ══ DIMENSION MODE toast ══ -->
+<div id="dim-toast"></div>
+<div id="dim-crossH"></div>
+<div id="dim-crossV"></div>
+<div id="dim-coords"></div>
+<!-- ══ END DIMENSION MODE ══ -->
+
+<!-- ══ LIGHTBOX ══ -->
+<div id="lightbox">
+  <button id="lb-close">✕ close</button>
+  <button class="lb-arrow" id="lb-prev">&#8592;</button>
+  <img id="lightbox-img" src="" alt="">
+  <iframe id="lightbox-video" src="" frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen style="display:none;width:min(90vw,960px);height:min(80vh,540px);border:1px solid rgba(255,255,255,0.08);"></iframe>
+  <button class="lb-arrow" id="lb-next">&#8594;</button>
+  <div id="lb-counter"></div>
+  <div id="lb-hint">← → to browse &nbsp;·&nbsp; esc to close</div>
+</div>
+<!-- ══ END LIGHTBOX ══ -->
+
+
+
+  <!-- PROJECT MODAL -->
+  <div id="modal" role="dialog" aria-modal="true">
+    <div class="modal-bar">
+      <a href="#hero" class="modal-logo" id="modal-logo" aria-label="Home">GAETANO</a>
+      <span class="modal-bar-center" id="modal-bar-label">Project</span>
+      <button id="modal-close" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-images" id="modal-images"></div>
+      <div id="modal-ruler">
+        <canvas id="modal-ruler-canvas"></canvas>
+        <div id="modal-ruler-block">0.0 cm</div>
+      </div>
+      <div class="modal-info" id="modal-info">
+        <div>
+           
+          <h2 class="modal-project-title" id="modal-title"></h2>
+        </div>
+        <p class="modal-desc" id="modal-desc"></p>
+        <div class="modal-meta" id="modal-meta"></div>
+        <div class="modal-nav-row">
+          <button class="modal-nav-btn" id="modal-prev">← Prev</button>
+          <button class="modal-nav-btn" id="modal-next">Next →</button>
+        </div>
+      </div>
+      <div id="modal-info-ruler">
+        <canvas id="modal-info-ruler-canvas"></canvas>
+        <div id="modal-info-ruler-block">0%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <a href="#hero" class="nav-logo" aria-label="Home">GAETANO</a>
+    <ul class="nav-links">
+      <li><a href="#hero"    data-section="hero">About</a></li>
+      <li><a href="#work"    data-section="work">Projects</a></li>
+      <li><a href="#contact" data-section="contact">Contact</a></li>
+    </ul>
+    <button id="dark-toggle" aria-label="Toggle dark mode">
+      <span class="toggle-icon icon-sun">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill= var(--muted) stroke="var(--muted)" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.93" y1="4.93" x2="7.05" y2="7.05"/><line x1="16.95" y1="16.95" x2="19.07" y2="19.07"/><line x1="4.93" y1="19.07" x2="7.05" y2="16.95"/><line x1="16.95" y1="7.05" x2="19.07" y2="4.93"/></svg>
+      </span>
+      <span class="toggle-thumb"></span>
+      <span class="toggle-icon icon-moon">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="var(--muted)" stroke="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </span>
+    </button>
+  </nav>
+
+  <!-- HERO — left: name, right: bio/links/tags/stats, all on one screen -->
+
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-layout">
+
+   <div class="hero-inner">
+
+
+        <!-- LEFT: name -->
+        
+        <div class="hero-left">
+          <p class="hero-label">Designer · Engineer · Artist</p>
+          <h1 class="hero-title">
+            <span class="hero-first-name" aria-hidden="true">GAETANO</span><br>
+            <em>HAMILTON</em>
+          </h1>
+          <p class="hero-sub">
+            Industrial Designer &amp; Mechanical Engineer.<br>
+            Rensselaer Polytechnic Institute — Graduating May 2026.
+          </p>
+   
+          </p>
+<br>
+          <div class="hero-about-links">
+            <a href="GaetanoHamilton_Resume.pdf" target="_blank" rel="noopener noreferrer" class="hero-about-link">Resume</a>
+            <a href="https://www.linkedin.com/in/gaetanohamilton/" target="_blank" rel="noopener noreferrer" class="hero-about-link">LinkedIn</a>  
+            <a href="/cdn-cgi/l/email-protection#57303632233639383f363a173822233b38383c7934383a" class="hero-about-link">Email</a>
+          </div>
+
+
+        </div>
+
+        <!-- RIGHT: bio, links, tags, stats -->
+        <!-- ── Edit your bio, links, tags and stats here ── -->
+        <div class="hero-right">
+          <p class="hero-sub">
+           I’m a senior at Rensselaer Polytechnic Institute, majoring in Mechanical Engineering and Design, Innovation, & Society, with a minor in Studio Arts. My focus is in merging human-centered design and engineering. I’ve led projects from designing an ornithopter for crop monitoring to developing a mechanism for accessibility in sneakers and jewelry, combining technical skills with creative problem-solving.
+<br> <br>
+Proficient in CAD, 3D modeling, rapid prototyping, and electronics, I also contribute to Instructables.com and have taught 500,000+ viewers through 3D modeling tutorials on YouTube. I thrive in collaborative environments, bringing curiosity and innovation to every project.
+
+          <div class="hero-about-tags">
+            <span class="hero-about-tag">Mechanical Engineering</span>
+            <span class="hero-about-tag">Product Design</span>
+            <span class="hero-about-tag">CAD &amp; 3D Modeling</span>
+            <span class="hero-about-tag">Rapid Prototyping</span>
+            <span class="hero-about-tag">Electronics</span>
+            <span class="hero-about-tag">Art &amp; Installation</span>
+          </div>
+          
+        </div>
+        <!-- ── End editable section ── -->
+
+      </div>
+    </div>
+    <span class="hero-scroll">Scroll</span>
+  </section>
+
+  <!-- ============================================================
+       WORK SECTION
+
+       HOW TO ADD YOUR THUMBNAIL IMAGE:
+       Replace:  <div class="thumb-placeholder" style="background:#xxx;..."></div>
+       With:     <img src="your-image.jpg" alt="Project Name">
+       Keep the outer <div class="thumb"> wrapper intact.
+
+       HOW TO ADD EXTRA MODAL IMAGES:
+       Fill data-images="photo2.jpg,photo3.jpg"
+       (comma-separated filenames in the same folder as this file)
+       Leave as "" for auto colour placeholders.
+       ============================================================ -->
+  <section id="work">
+    <div class="section-header">
+      <span class="section-number">[ 01 ]</span>
+      <h2 class="section-title">Projects</h2>
+    </div>
+    <div class="portfolio-grid">
+
+      <!-- PROJECT 9 — Renderings -->
+      <div class="portfolio-item reveal"
+           data-title="Renderings"
+           data-tag="Hand Sketching · Product Visualization using: Rhino 3D · Seimens NX · SolidWorks · Fusion 360 · Blender 3D"
+           data-year="2022–Present"
+           data-role="3D Modeler and Artist"
+           data-desc="A collection of product sketches, 3D renderings and visualizations from various projects and explorations. Demonstrates proficiency in CAD modeling, hand sketching, and photorealistic rendering across product concepts, mechanical components, and architectural forms."
+           data-color="#BDB7AF"
+           data-images="Slide34.JPG,Slide43.jpg,Slide35.JPG">
+        <div class="thumb">
+          <img src="render.jpg" alt="Renderings">
+        </div>
+        <div class="item-info">
+          <span class="item-name">Renderings</span>
+          <span class="item-tag">Design Visualization</span>
+        </div>
+        <p class="item-desc">Sketches, 3D renderings and visualizations across projects and explorations.</p>
+      </div>
+
+
+      <!-- PROJECT 1 — Solemates (No-Tie Sneakers) -->
+      <div class="portfolio-item reveal"
+           data-title="Solemates"
+           data-tag="Human Factors · Fusion 360 · 3D printing · Pattern Making · Sewing · Collaboration · User Testing · Teamwork"
+           data-year="Fall 2023"
+           data-role="Team Lead"
+           data-desc="Designed a no-tie sneaker with a knob-based tightening mechanism to improve accessibility for users with limited hand dexterity. Developed prototypes with custom patterns and hand-sewn uppers. Refined the mechanism through iterative 3D printing, testing, and user feedback."
+           data-color="#C4B9AA"
+           data-images="Slide9.JPG,Slide6.JPG,Slide7.JPG,Slide8.JPG"
+           data-videos="1Aw6RdrB51I@3:half,Vf7ZFknSdhM@3:half">
+
+        <div class="thumb">
+          <img src="solemates.JPG" loading="lazy" alt="Solemates">
+        </div>
+        <div class="item-info">
+          <span class="item-name">Solemates</span>
+          <span class="item-tag">Product Design</span>
+        </div>
+        <p class="item-desc">Accessible no-tie sneaker with 3D-printed tightening mechanisms and replacable soles.</p>
+      </div>
+
+      <!-- PROJECT 2 — Accessible Jewelry Clasps -->
+      <div class="portfolio-item reveal"
+           data-title="Accessible Jewelry Clasps"
+           data-tag="Sketching · 3D Printing · User Testing · Rendering · Unreal Engine · Blender · Fusion 360"
+           data-year="Spring 2023"
+           data-role="CAD Modeler/Mechanism Designer"
+           data-desc="Designed pendant clasps, enabling users with limited hand dexterity to independently fasten necklaces. Iterated through prototypes to balance usability, reliability, and aesthetics while maintaining a refined, luxury-inspired design language."
+           data-color="#C9BFB6"
+           data-images="Slide10.JPG,Slide11.JPG,Slide12.JPG,Slide13.JPG">
+        <div class="thumb">
+          <img src="jewelry.jpg" loading="lazy" alt="Accessible Jewelry Clasps">
+        </div>
+        <div class="item-info">
+          <span class="item-name">Accessible Jewelry Clasps</span>
+          <span class="item-tag">Product Design</span>
+        </div>
+        <p class="item-desc">Inclusive clasp design for users with limited dexterity.</p>
+      </div>
+
+      <!-- PROJECT 3 — Gravity-Powered Wooden Gear Clock -->
+      <div class="portfolio-item reveal"
+           data-title="Gravity-Powered Clock"
+           data-tag="2D Drafting · CAD · Woodworking · Prototyping · Mechanical Design · Horology · Research"
+           data-year="2022"
+           data-role="Design Engineer (Solo Project)"
+           data-desc="Developed a 27&quot; gravity-powered wooden clock featuring a tourbillon escapement and retrograding minute hand. Modeled mechanisms in Fusion 360 and fabricated the gear train by hand, applying horology research on escapements, gear ratios, and gravity-driven regulation."
+           data-color="#A89F94"
+           data-images="Slide2.JPG,Slide3.JPG,Slide37.JPG,Slide4.JPG"
+           data-videos="nVxXaC0hO8M@0,5r2BgG2kgFU?si@1,cII2KJ8cpvE@2:half,elsnzwEgUEk@2:half">
+        <div class="thumb">
+          <img src="clock.JPG" loading="lazy" alt="Gravity-Powered Wooden Gear Clock">
+        </div>
+        <div class="item-info">
+          <span class="item-name">Gravity-Powered Clock</span>
+          <span class="item-tag">Craft & Engineering</span>
+        </div>
+        <p class="item-desc">Hand-crafted gravity-powered wooden clock with tourbillon escapement.</p>
+      </div>
+
+      <!-- PROJECT 4 — Paper Lantern Lamps -->
+      <div class="portfolio-item reveal"
+           data-title="Paper Lantern Lamps"
+           data-tag="Concept Sketching · Material Research · Fabrication · Electrical · Blender 3D"
+           data-year="Winter 2025"
+           data-role="Designer (Solo Project)"
+           data-desc="Designed a series of paper lantern lamps inspired by Isamu Noguchi and his Akari Light Sculptures. Developed lightweight frame structures and paper diffusers to explore the interplay of light, shadow, and material."
+           data-color="#D6CEBC"
+           data-images="Slide30.JPG,Slide31.JPG,Slide33.JPG"  
+           data-videos="21s310VJoxE@1">
+
+        <div class="thumb">
+          <img src="lamps.jpg" loading="lazy" alt="Paper Lantern Lamps">
+        </div>
+        <div class="item-info">
+          <span class="item-name">Paper Lantern Lamps</span>
+          <span class="item-tag">Art & Design</span>
+        </div>
+        <p class="item-desc">Lantern Lamps inspired by Isamu Noguchi, exploring light, shadow, and form.</p>
+      </div>
+
+      <!-- PROJECT 5 — Hydro-Powered Curiosity -->
+      <div class="portfolio-item reveal"
+           data-title="Hydro-Powered Curiosity"
+           data-tag="Rapid Prototyping · Fluid Dynamics · Location Research · Creativity"
+           data-year="Summer 2024"
+           data-role="Designer (Solo Project)"
+           data-desc="Designed a hydro-powered installation that converts flowing water into sound. River-driven mechanisms generate musical notes, creating an interactive system that connects art, engineering, and environmental awareness through the experience of moving water."
+           data-color="#9EAAB0"
+           data-images="Slide26.JPG,Slide27.JPG,Slide29.JPG"
+           data-videos="urjJJJED_74@1">
+
+        <div class="thumb">
+          <img src="water.jpg" loading="lazy" alt="Hydro-Powered Curiosity">
+        </div>
+        <div class="item-info">
+          <span class="item-name">Hydro-Powered Curiosity</span>
+          <span class="item-tag">Art & Engineering</span>
+        </div>
+        <p class="item-desc">Interactive instrument translating water flow into sound to highlight hydropower.</p>
+      </div>
+
+      <!-- PROJECT 6 — Baseball Sneakers -->
+      <div class="portfolio-item reveal"
+           data-title="Baseball Sneakers"
+           data-tag="Conceptual Blending · Design Translation · Pattern Making · Manufacturing Research · Sewing"
+           data-year="Summer 2023"
+           data-role="Designer (Solo Project)"
+           data-desc="Designed canvas sneakers inspired by baseball aesthetics, incorporating characteristic stitching patterns and materials. Developed custom lasts and patterns to construct the uppers. Integrated cork insoles for comfort, structure, and durability."
+           data-color="#BFB8AD"
+           data-images="Slide14.JPG,Slide15.JPG,Slide16.JPG,Slide17.JPG">
+        <div class="thumb">
+          <img src="sneakerss.jpg" loading="lazy" alt="Baseball Sneakers">
+        </div>
+        <div class="item-info">
+          <span class="item-name">Baseball Sneakers</span>
+          <span class="item-tag">Product Design</span>
+        </div>
+        <p class="item-desc">Hand-sewn sneakers inspired by baseball aesthetics.</p>
+      </div>
+
+      <!-- PROJECT 7 — Agricultural Ornithopter -->
+      <div class="portfolio-item reveal"
+           data-title="Agricultural Ornithopter"
+           data-tag="Leadership · Mechanical Design · Seimens NX · Fusion 360 · Electronics · System Integration · Component Selection"
+           data-year="Summer 2024"
+           data-role="Lead Engineer"
+           data-desc="Led a team in designing a flapping-wing aircraft inspired by bird flight for crop monitoring and non-invasive pest deterrence. Engineered and tested the flapping mechanism while communicating development progress and challenges to stakeholders."
+           data-color="#B8B5AE"
+           data-images="Slide23.JPG,Slide24.JPG,Slide25.JPG" 5AeuCir9iOQ
+           data-videos="5AeuCir9iOQ@1:half,8WQYo7K3Gus@1:half">
+
+        <div class="thumb">
+          <img src="orno.png" loading="lazy" alt="Agricultural Ornithopter"> 
+        </div>
+        <div class="item-info">
+          <span class="item-name">Agricultural Ornithopter</span>
+          <span class="item-tag">Mech. Engineering</span>
+        </div>
+        <p class="item-desc">Flapping-wing aircraft for crop monitoring and pest control.</p>
+      </div>
+
+      <!-- PROJECT 8 — Scents-ory Toy Series -->
+      <div class="portfolio-item reveal"
+           data-title="Scents-ory Toy Series"
+           data-tag="Rhino 3D · User Research · Organization · Collaboration · Rapid Prototyping · Market Analysis"
+           data-year="Spring 2023"
+           data-role="Industrial Designer"
+           data-desc="Developed a series of sensory toys designed to engage children through scent, texture, and playful interaction while complementing the home environment. Combined varied forms and materials inspired by Hella Jongerius, embedding scented elements to stimulate multiple senses."
+           data-color="#C8C2B8"
+           data-images="Slide18.JPG,Slide19.JPG,Slide20.JPG,Slide21.JPG,Slide22.JPG">
+        <div class="thumb">
+          <img src="toy.jpg" loading="lazy" alt="Scents-ory Toy Series">
+        </div>
+        <div class="item-info">
+          <span class="item-name">Scents-ory Toy Series</span>
+          <span class="item-tag">Product Design</span>
+        </div>
+        <p class="item-desc">Toy series engaging children through scent & play, inspired by designer Hella Jongerius.</p>
+      </div>
+
+      <!-- PROJECT 10 — Automata -->
+      <div class="portfolio-item reveal"
+           data-title="Automata"
+           data-tag="Creativity · Mechanical Design · Experimentation · Visual Storytelling · Art"
+           data-year="2019–Present"
+           data-role="Design Engineer (Solo Project)"
+           data-desc="Designed and built a series of automata - mechanical sculptures that produce lifelike movement through cam-driven mechanisms and linkage systems. Explored how simple mechanical systems translate rotational input into expressive kinetic motion."
+           data-color="#AFA99F"
+           data-images="Slide38.jpg" 
+           data-videos="Ois5vKYg2bI@0">
+
+        <div class="thumb">
+          <img src="automata.jpg" alt="Automata"> -->
+        </div>
+        <div class="item-info">
+          <span class="item-name">Automata</span>
+          <span class="item-tag">Craft & Engineering</span>
+        </div>
+        <p class="item-desc">Mechanical sculptures animating motion through cams and linkages.</p>
+      </div>
+
+<!--
+
+      <!-- PROJECT 11 — Work in Progress 
+      <div class="portfolio-item reveal"
+           data-title="Work in Progress"
+           data-tag="Coming Soon"
+           data-year="2025"
+           data-role="——"
+           data-desc="This slot is ready for your next project. Update the data attributes above and swap in a thumbnail image."
+           data-color="#D4CFC8"
+           data-images="">
+        <div class="thumb">
+          <div class="thumb-placeholder" style="background:#D4CFC8;width:100%;height:100%;"></div>
+        </div>
+        <div class="item-info">
+          <span class="item-name">Work in Progress</span>
+          <span class="item-tag">Coming Soon</span>
+        </div>
+        <p class="item-desc">Project in development — coming soon.</p>
+      </div>
+
+      <!-- PROJECT 12 — Work in Progress 
+      <div class="portfolio-item reveal"
+           data-title="Work in Progress"
+           data-tag="Coming Soon"
+           data-year="2025"
+           data-role="——"
+           data-desc="This slot is ready for your next project. Update the data attributes above and swap in a thumbnail image."
+           data-color="#CCCAC4"
+           data-images="">
+        <div class="thumb">
+          <div class="thumb-placeholder" style="background:#CCCAC4;width:100%;height:100%;"></div>
+        </div>
+        <div class="item-info">
+          <span class="item-name">Work in Progress</span>
+          <span class="item-tag">Coming Soon</span>
+        </div>
+        <p class="item-desc">Project in development — coming soon.</p>
+      </div>
+
+-->
+
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="section-header">
+      <span class="section-number">[ 02 ]</span>
+      <h2 class="section-title">Contact</h2>
+    </div>
+    <div class="contact-inner">
+      <div>
+        <img src="gaetano.jpg" alt="Let's work together" class="contact-heading" style="width:400px; height:400px; object-fit:cover;">
+        <p class="contact-note" style="margin-bottom:0;">
+          Seeking full-time opportunities in Industrial Design or Mechanical Engineering, as well as creative engineering projects and internships.
+Open to relocation worldwide.<br><br></p>
+        <div class="contact-links" style="margin-top:0;">
+          <!-- CHANGE THIS: replace with your real email -->
+          <a href="GaetanoHamilton_Resume.pdf" class="contact-link">Resume</a>
+          <a href="https://www.linkedin.com/in/gaetanohamilton/" target="_blank" rel="noopener noreferrer" class="contact-link">LinkedIn</a>
+          <a href="https://www.instructables.com/member/da%20Bulldog/" target="_blank" rel="noopener noreferrer" class="contact-link">Instructables</a>
+          <a href="/cdn-cgi/l/email-protection#d2b5b3b7a6b3bcbdbab3bf92bda7a6bebdbdb9fcb1bdbf" class="contact-link">Email</a>
+
+        </div>
+      </div>
+      <div class="contact-form">
+        <!-- Sign up at formspree.io and replace YOUR_FORM_ID -->
+        <form action="https://formspree.io/f/mgonydzy" method="POST">
+          <div class="form-row">
+            <label for="fname">Name</label>
+            <input type="text" id="fname" name="name" required placeholder="">
+          </div>
+          <div class="form-row">
+            <label for="femail">Email</label>
+            <input type="email" id="femail" name="email" required placeholder="">
+          </div>
+          <div class="form-row">
+            <label for="fmsg">Message</label>
+            <textarea id="fmsg" name="message" required placeholder="Looking forward to hearing from you!"></textarea>
+          </div>
+          <button type="submit" class="btn-submit">
+            Send message <span class="arrow">→</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-left">
+      <span class="footer-copy">© 2025 Gaetano Hamilton. All rights reserved.</span>
+      <p class="dim-hint">[ press <kbd>D</kbd> to inspect ]</p>
+    </div>
+    <a href="#hero" class="footer-back" style="display:none"></a>
+    <button id="rocket-btn" aria-label="Back to top">
+      <div id="rocket-inner">
+        <!-- Rocket SVG — drawn in site line style -->
+        <svg width="28" height="48" viewBox="0 0 28 48" fill="none"
+             stroke="var(--muted)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <!-- Body -->
+          <path d="M14 4 C14 4 22 12 22 26 L14 30 L6 26 C6 12 14 4 14 4Z" stroke="var(--fg)" fill="none"/>
+          <!-- Nose tip -->
+          <line x1="14" y1="4" x2="14" y2="1"/>
+          <!-- Window -->
+          <circle cx="14" cy="18" r="3" stroke="var(--muted)" fill="none"/>
+          <!-- Fins left -->
+          <path d="M6 26 L2 34 L6 32"/>
+          <!-- Fins right -->
+          <path d="M22 26 L26 34 L22 32"/>
+          <!-- Exhaust nozzle -->
+          <path d="M10 30 L10 34 L14 32 L18 34 L18 30"/>
+          <!-- Flame — separate group toggled by class -->
+          <g id="rocket-flame">
+            <path d="M12 34 Q14 42 12 46 Q14 40 16 46 Q14 42 16 34"
+                  stroke="none" fill="var(--flame)" opacity="0.9"/>
+            <path d="M13 34 Q14 39 13 43"
+                  stroke="var(--flame)" stroke-width="1" fill="none" opacity="0.45"/>
+          </g>
+        </svg>
+        <span class="rocket-label">To top</span>
+      </div>
+    </button>
+  </footer>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    // ── Custom cursor with dark/light auto-switching ───────────
+    const cursor = document.getElementById('cursor');
+
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top  = e.clientY + 'px';
+
+      // Check which section the cursor is currently over
+      // and switch colour accordingly
+      const el = document.elementFromPoint(e.clientX, e.clientY);
+      const inDark = el && el.closest('#about') !== null;
+      cursor.classList.toggle('light', inDark);
+    });
+
+    // Hide cursor when mouse leaves the browser window
+    document.addEventListener('mouseleave', e => {
+      if (!e.relatedTarget) cursor.style.opacity = '0';
+    });
+    document.addEventListener('mouseenter', () => cursor.style.opacity = '1');
+
+    function addHover()  { cursor.classList.add('hover'); }
+    function remHover()  { cursor.classList.remove('hover'); }
+    function bindHover() {
+      document.querySelectorAll('a, button, input, textarea, .portfolio-item, .modal-img-block img, #rocket-btn').forEach(el => {
+        el.removeEventListener('mouseenter', addHover);
+        el.removeEventListener('mouseleave', remHover);
+        el.addEventListener('mouseenter', addHover);
+        el.addEventListener('mouseleave', remHover);
+      });
+    }
+    bindHover();
+
+    // ── Scroll reveal ──────────────────────────────────────────
+
+    // ── Merged scroll handler (nav border + active nav + hero crossfade) ──
+    // Single rAF-throttled listener replaces three separate scroll listeners
+    (function () {
+      const nav      = document.getElementById('nav');
+      const navLinks = document.querySelectorAll('.nav-links a[data-section]');
+      const sections = ['hero','work','contact'].map(id => document.getElementById(id));
+      const heroName = document.querySelector('.hero-first-name');
+      const navLogo  = document.querySelector('.nav-logo');
+      const hero     = document.getElementById('hero');
+      // Tune: px from hero bottom where fade starts / ends
+      const FADE_START = 600, FADE_END = 500;
+      let ticking = false;
+
+      function onScroll() {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          // Active nav section
+          const mid = window.innerHeight * 0.4;
+          let current = 'hero';
+          sections.forEach(sec => {
+            if (sec && sec.getBoundingClientRect().top <= mid) current = sec.id;
+          });
+          navLinks.forEach(a => a.classList.toggle('active', a.dataset.section === current));
+
+          // Hero name crossfade
+          const heroBottom = hero.getBoundingClientRect().bottom;
+          const progress   = Math.min(1, Math.max(0, (FADE_START - heroBottom) / (FADE_START - FADE_END)));
+          heroName.style.opacity      = 1 - progress;
+          navLogo.style.opacity       = progress;
+          navLogo.style.pointerEvents = progress > 0.5 ? 'auto' : 'none';
+
+          ticking = false;
+        });
+      }
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+    })();
+    const modalClose = document.getElementById('modal-close');
+    const modalLogo  = document.getElementById('modal-logo');
+    const elTitle    = document.getElementById('modal-title');
+    const elTag      = document.getElementById('modal-tag');
+    const elDesc     = document.getElementById('modal-desc');
+    const elMeta     = document.getElementById('modal-meta');
+    const elImages   = document.getElementById('modal-images');
+    const elBarLabel = document.getElementById('modal-bar-label');
+    const prevBtn    = document.getElementById('modal-prev');
+    const nextBtn    = document.getElementById('modal-next');
+
+    let savedScrollY = 0, currentIdx = 0;
+    const allItems = Array.from(document.querySelectorAll('.portfolio-item'));
+
+    function shiftHex(hex, amt) {
+      hex = hex.replace('#','');
+      if (hex.length === 3) hex = hex.split('').map(c=>c+c).join('');
+      const r = Math.min(255, Math.max(0, parseInt(hex.slice(0,2),16)+amt));
+      const g = Math.min(255, Math.max(0, parseInt(hex.slice(2,4),16)+amt));
+      const b = Math.min(255, Math.max(0, parseInt(hex.slice(4,6),16)+amt));
+      return `rgb(${r},${g},${b})`;
+    }
+
+    function buildBlock(cls, color, src, alt) {
+      const block = document.createElement('div');
+      block.className = `modal-img-block ${cls}`;
+      if (src) {
+        const img = document.createElement('img');
+        img.src = src; img.alt = alt; block.appendChild(img);
+        img.addEventListener('click', () => lbOpen(img.src));
+      } else {
+        const ph = document.createElement('div');
+        ph.className = 'ph';
+        ph.style.cssText = `background:${color};width:100%;height:100%;`;
+        block.appendChild(ph);
+      }
+      return block;
+    }
+
+    function makeMetaRow(label, value) {
+      const row   = document.createElement('div');
+      row.className = 'modal-meta-row';
+      const lEl = document.createElement('span');
+      lEl.className   = 'modal-meta-label';
+      lEl.textContent = label;
+      const vEl = document.createElement('span');
+      vEl.className   = 'modal-meta-value';
+      vEl.textContent = value;
+      row.appendChild(lEl);
+      row.appendChild(vEl);
+      return row;
+    }
+
+    function openModal(item, idx) {
+      const d = item.dataset;
+      currentIdx = idx;
+      elTitle.textContent    = d.title || '';
+ 
+      elDesc.textContent     = d.desc  || '';
+      elBarLabel.textContent = d.title || 'Project';
+      elMeta.innerHTML = '';
+      [['Year:', d.year], ['Role:', d.role], ['Skills:', d.tag]].forEach(([l, v]) => {
+        if (v) elMeta.appendChild(makeMetaRow(l, v));
+      });
+      elImages.innerHTML = '';
+      const base   = d.color || '#C9C3BA';
+      const extras = (d.images && d.images.trim()) ? d.images.split(',').map(s=>s.trim()).filter(Boolean) : [];
+
+      // data-videos format: "ID@after,ID@after" — @after is optional (appends at end if omitted)
+      // e.g. "abc123@1,def456@1" puts two videos side-by-side after image index 1
+      // size: "half" = 50% width (side by side), "full" = 100% (default)
+      // e.g. "abc123@1:half,def456@1:half"
+      const videoEntries = (d.videos || (d.video ? d.video + (d.videoAfter != null && d.videoAfter !== '' ? '@' + d.videoAfter : '') : ''))
+        .split(',').map(s => s.trim()).filter(Boolean).map(entry => {
+          const [idPart, sizePart] = entry.split(':');
+          const [ytId, afterStr]   = idPart.split('@');
+          return { ytId: ytId.trim(), after: afterStr != null ? parseInt(afterStr) : null, size: sizePart || 'full' };
+        });
+
+      function buildVideoBlock(ytId, size) {
+        const wrapper = document.createElement('div');
+        wrapper.style.cssText = (size === 'half'
+          ? 'display:inline-block;width:50%;vertical-align:top;'
+          : 'display:block;width:100%;') + 'aspect-ratio:16/9;background:#000;position:relative;';
+        const iframe = document.createElement('iframe');
+        iframe.src = `https://www.youtube.com/embed/${ytId}`;
+        iframe.title = 'Project video';
+        iframe.setAttribute('frameborder', '0');
+        iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+        iframe.setAttribute('allowfullscreen', '');
+        iframe.style.cssText = 'width:100%;height:100%;display:block;';
+        wrapper.appendChild(iframe);
+
+
+        return wrapper;
+      }
+
+      function insertVideosAfter(afterIdx) {
+        const group = videoEntries.filter(v => v.after === afterIdx);
+        if (!group.length) return;
+        // If any are 'half', wrap them in a flex row
+        const hasHalf = group.some(v => v.size === 'half');
+        const container = document.createElement('div');
+        container.className = 'modal-img-block extra';
+        container.style.cssText = hasHalf
+          ? 'display:flex;flex-direction:row;gap:0.5rem;width:100%;aspect-ratio:unset;'
+          : 'display:block;width:100%;aspect-ratio:unset;';
+        group.forEach(v => container.appendChild(buildVideoBlock(v.ytId, v.size)));
+        elImages.appendChild(container);
+      }
+
+      if (extras.length) {
+        extras.forEach((src, i) => {
+          elImages.appendChild(buildBlock('extra', base, src, `${d.title} ${i+1}`));
+          insertVideosAfter(i);
+        });
+        // Videos with no @after or after >= length go at the end
+        const endGroup = videoEntries.filter(v => v.after === null || v.after >= extras.length);
+        if (endGroup.length) {
+          const hasHalf = endGroup.some(v => v.size === 'half');
+          const container = document.createElement('div');
+          container.className = 'modal-img-block extra';
+          container.style.cssText = hasHalf
+            ? 'display:flex;flex-direction:row;gap:0;width:100%;aspect-ratio:unset;'
+            : 'display:block;width:100%;aspect-ratio:unset;';
+          endGroup.forEach(v => container.appendChild(buildVideoBlock(v.ytId, v.size)));
+          elImages.appendChild(container);
+        }
+      } else {
+        [0,-18,18].forEach(s => elImages.appendChild(buildBlock('extra', shiftHex(base,s), null, '')));
+        videoEntries.forEach(v => {
+          const container = document.createElement('div');
+          container.className = 'modal-img-block extra';
+          container.style.cssText = 'display:block;width:100%;aspect-ratio:16/9;background:#000;';
+          container.appendChild(buildVideoBlock(v.ytId, v.size));
+          elImages.appendChild(container);
+        });
+      }
+      prevBtn.style.visibility = idx > 0                  ? 'visible' : 'hidden';
+      nextBtn.style.visibility = idx < allItems.length-1  ? 'visible' : 'hidden';
+      modal.classList.add('open');
+      document.body.classList.add('modal-open');
+      elImages.scrollTop = 0;
+      bindHover();
+    }
+    function closeModal() {
+      modal.classList.remove('open');
+      document.body.classList.remove('modal-open');
+      window.scrollTo(0, savedScrollY);
+    }
+
+    function navigate(dir) {
+      const next = currentIdx + dir;
+      if (next >= 0 && next < allItems.length) {
+        openModal(allItems[next], next);
+        document.getElementById('modal').scrollTop = 0;
+        document.getElementById('modal-info').scrollTop = 0;
+      }
+    }
+
+    allItems.forEach((item, i) => {
+      item.addEventListener('click', () => { savedScrollY = window.scrollY; openModal(item, i); });
+    });
+    modalClose.addEventListener('click', closeModal);
+    modalLogo.addEventListener('click',  closeModal);
+    prevBtn.addEventListener('click', () => navigate(-1));
+    nextBtn.addEventListener('click', () => navigate(1));
+    // Modal keydown — only fires when lightbox is NOT open
+    document.addEventListener('keydown', e => {
+      if (document.getElementById('lightbox').classList.contains('open')) return;
+      if (!modal.classList.contains('open')) return;
+      if (e.key === 'Escape')     closeModal();
+      if (e.key === 'ArrowLeft')  navigate(-1);
+      if (e.key === 'ArrowRight') navigate(1);
+    });
+
+    // ── Dark mode toggle ───────────────────────────────────────
+    const darkToggle = document.getElementById('dark-toggle');
+    darkToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+    });
+
+    // ── Rocket back-to-top ─────────────────────────────────────
+    (function () {
+      const btn = document.getElementById('rocket-btn');
+      if (!btn) return;
+      let busy = false;
+
+      // Easing functions
+      function easeInOut(t) {
+        return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2;
+      }
+      function easeIn(t) { return t * t * t; }
+
+      // Quadratic Bézier point
+      function bezier(t, p0, p1, p2) {
+        const mt = 1 - t;
+        return mt*mt*p0 + 2*mt*t*p1 + t*t*p2;
+      }
+
+      // Manual scroll — onFrame(progress), onDone()
+      function smoothScrollToTop(duration, onFrame, onDone) {
+        const start = window.scrollY;
+        if (start === 0) { onDone && onDone(); return; }
+        const t0 = performance.now();
+        function step(now) {
+          const p = Math.min((now - t0) / duration, 1);
+          window.scrollTo(0, start * (1 - easeInOut(p)));
+          onFrame && onFrame(p);
+          if (p < 1) requestAnimationFrame(step);
+          else onDone && onDone();
+        }
+        requestAnimationFrame(step);
+      }
+
+      function spawnPuffs() {
+        [
+          { px: '-10px', py: '12px' },
+          { px:   '0px', py: '16px' },
+          { px:  '10px', py: '12px' },
+        ].forEach(({ px, py }) => {
+          const p = document.createElement('div');
+          p.className = 'rocket-puff';
+          p.style.cssText = `width:10px;height:10px;left:50%;top:100%;margin-left:-5px;--px:${px};--py:${py};`;
+          btn.appendChild(p);
+          p.addEventListener('animationend', () => p.remove(), { once: true });
+        });
+      }
+
+      function buildChuteHTML() {} // removed
+
+      // Hover — rumble + flame + puffs while mouse is over button
+      let puffInterval = null;
+      btn.addEventListener('mouseenter', () => {
+        if (busy) return;
+        btn.classList.add('hovering');
+        spawnPuffs();
+        puffInterval = setInterval(spawnPuffs, 500);
+      });
+      btn.addEventListener('mouseleave', () => {
+        btn.classList.remove('hovering');
+        clearInterval(puffInterval);
+        puffInterval = null;
+      });
+
+      btn.addEventListener('click', () => {
+        if (busy) return;
+        busy = true;
+
+        // Phase 1 — ignition shake (380ms)
+        btn.classList.remove('hovering');
+        clearInterval(puffInterval);
+        puffInterval = null;
+        btn.classList.add('launching');
+        spawnPuffs();
+
+        setTimeout(() => {
+          btn.classList.remove('launching');
+
+          // Snapshot start position (centre of button)
+          const r  = btn.getBoundingClientRect();
+          const vw = window.innerWidth;
+          const vh = window.innerHeight;
+
+          const sx = r.left + r.width  / 2;
+          const sy = r.top  + r.height / 2;
+
+          // Arc: sweep to upper-left corner and off-screen
+          // Control point pulls hard upper-right to create the diagonal curve
+          const ex  = vw / 2;       // exit at centre-top
+          const ey  = -80;           // off-screen above
+          const cpx = sx;            // directly above start → rocket launches vertically
+          const cpy = vh * -0.4;     // control point high above — tangent at t=0 is straight up
+
+          // Clone — SVG + ghost label
+          const clone = document.createElement('div');
+          clone.id = 'rocket-clone';
+          const svgEl = btn.querySelector('svg').cloneNode(true);
+          const labelEl = btn.querySelector('.rocket-label').cloneNode(true);
+          // Make flame visible on clone
+          const cloneFlame = svgEl.querySelector('#rocket-flame');
+          if (cloneFlame) { cloneFlame.style.opacity = '1'; }
+          clone.appendChild(svgEl);
+          clone.appendChild(labelEl); // label inherits opacity:0; from CSS
+          clone.style.cssText = `left:${sx}px; top:${sy}px; transform:translate(-50%,-50%);`;
+          document.body.appendChild(clone);
+
+          btn.classList.add('blasting');
+
+          // Seed prevX slightly off so first-frame angle is straight up (not zero)
+          let prevX = sx, prevY = sy + 1;
+
+          smoothScrollToTop(2200,
+            (progress) => {
+              const t    = easeIn(progress);
+              const nx   = bezier(t, sx, cpx, ex);
+              const ny   = bezier(t, sy, cpy, ey);
+              const dx   = nx - prevX;
+              const dy   = ny - prevY;
+              const angle = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
+              prevX = nx; prevY = ny;
+              clone.style.left      = nx + 'px';
+              clone.style.top       = ny + 'px';
+              clone.style.transform = `translate(-50%,-50%) rotate(${angle}deg)`;
+            },
+            () => {
+              clone.remove();
+              btn.classList.remove('blasting');
+              busy = false;
+            }
+          );
+
+        }, 380);
+      });
+    })();
+    // ── End rocket ─────────────────────────────────────────────
+
+
+    // ══ DIMENSION MODE — press D to toggle ═══════════════════════
+    (function () {
+      const toast  = document.getElementById('dim-toast');
+      const crossH = document.getElementById('dim-crossH');
+      const crossV = document.getElementById('dim-crossV');
+      const coords = document.getElementById('dim-coords');
+
+      let active     = false;
+      let mode       = 'page';
+      let boxList    = [];   // [{ el, r }]  permanent boxes
+      let dimMarkers = [];   // transient dim lines/labels for hovered box
+      let hotBox     = null; // currently highlighted box entry
+
+      function px(v) { return Math.round(v) + 'px'; }
+
+      function navH()      { const n = document.getElementById('nav');       return n ? n.getBoundingClientRect().bottom : 52; }
+      function modalBarH() { const b = document.querySelector('.modal-bar'); return b ? b.getBoundingClientRect().bottom : 52; }
+
+      // ── Create a permanent box overlay ──────────────────────────
+      // isFixed=true  → element is CSS position:fixed (e.g. nav).
+      //                  Box drawn position:fixed, rect stored in viewport-space.
+      // isFixed=false → normal document element.
+      //                  Box drawn position:absolute, rect stored in document-space.
+      // Modal mode always uses fixed positioning (modal is a fixed overlay).
+      function addBox(r, cls, minY, isFixed) {
+        const isModal  = (mode === 'modal');
+        const useFixed = isModal || isFixed;
+        const sy       = useFixed ? 0 : window.scrollY;
+
+        // r values are viewport-space (from getBoundingClientRect).
+        // minY is the nav bottom in viewport-space — only clip elements that
+        // actually overlap it. Elements fully above viewport have negative r.bottom
+        // but are still real elements; don't skip them.
+        if (r.width < 2 || r.bottom <= r.top) return;
+        if (r.width > window.innerWidth * 0.85) return; // skip full-width spanning boxes
+
+        const el = document.createElement('div');
+        el.className = 'dim-box ' + cls;
+        Object.assign(el.style, {
+          position:      useFixed ? 'fixed' : 'absolute',
+          pointerEvents: 'none',
+          boxSizing:     'border-box',
+          left:          r.left + 'px',
+          top:           (r.top + sy) + 'px',
+          width:         r.width + 'px',
+          height:        r.height + 'px',
+          zIndex:        7990,
+          opacity:       'var(--dim-opacity)'
+        });
+        document.body.appendChild(el);
+
+        // Store in document-space for hit-testing.
+        boxList.push({ el, r: {
+          left:   r.left,
+          right:  r.right,
+          top:    r.top    + sy,
+          bottom: r.bottom + sy,
+          width:  r.width,
+          height: r.height
+        }, useFixed });
+      }
+
+      // ── Create a box inside a scrolling container ────────────────
+      // Used for modal image blocks so they scroll naturally with the images panel.
+      // Coords are relative to the container's top-left + scrollTop.
+      let _svgDefs = null;
+      function ensureDefs() {
+        if (_svgDefs) return;
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.style.cssText = 'position:fixed;width:0;height:0;overflow:visible;pointer-events:none;z-index:7990;';
+        svg.innerHTML = `<defs>
+          <marker id="dim-arr-end" markerWidth="6" markerHeight="6" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="var(--dim-color)"/>
+          </marker>
+          <marker id="dim-arr-start" markerWidth="6" markerHeight="6" refX="0" refY="3" orient="auto-start-reverse">
+            <path d="M0,0 L6,3 L0,6 Z" fill="var(--dim-color)"/>
+          </marker>
+        </defs>`;
+        document.body.appendChild(svg);
+        _svgDefs = svg;
+        dimMarkers.push(svg); // cleaned up with dims
+      }
+
+      // Draw an SVG dim line with arrows at both ends
+      // coords are always document-space; posFixed=true for modal
+      function drawSVGLine(x1, y1, x2, y2, isHoriz, posFixed) {
+        ensureDefs();
+        const PAD = 8;
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        const minX = Math.min(x1, x2), minY = Math.min(y1, y2);
+        const w    = Math.max(Math.abs(x2 - x1), 1);
+        const h    = Math.max(Math.abs(y2 - y1), 1);
+        const OVF  = 10;
+        const pos  = posFixed ? 'fixed' : 'absolute';
+        svg.style.cssText = `position:${pos};pointer-events:none;z-index:7995;overflow:visible;opacity:var(--dim-opacity);left:${minX - OVF}px;top:${minY - OVF}px;width:${w + OVF*2}px;height:${h + OVF*2}px;`;
+        const lx1 = x1 - minX + OVF, ly1 = y1 - minY + OVF;
+        const lx2 = x2 - minX + OVF, ly2 = y2 - minY + OVF;
+        let ax1 = lx1, ay1 = ly1, ax2 = lx2, ay2 = ly2;
+        if (isHoriz) {
+          ax1 = lx1 < lx2 ? lx1 + PAD : lx1 - PAD;
+          ax2 = lx2 > lx1 ? lx2 - PAD : lx2 + PAD;
+        } else {
+          ay1 = ly1 < ly2 ? ly1 + PAD : ly1 - PAD;
+          ay2 = ly2 > ly1 ? ly2 - PAD : ly2 + PAD;
+        }
+        svg.innerHTML = `<line x1="${ax1}" y1="${ay1}" x2="${ax2}" y2="${ay2}"
+          stroke="var(--dim-color)" stroke-width="1"
+          marker-start="url(#dim-arr-start)" marker-end="url(#dim-arr-end)"/>`;
+        document.body.appendChild(svg);
+        dimMarkers.push(svg);
+      }
+
+      function dimH(x1, x2, y, label, minY, posFixed) {
+        const sy = Math.max(minY || 0, y);
+        if (x2 - x1 < 40) return;
+        drawSVGLine(x1, sy, x2, sy, true, posFixed);
+        const lb = document.createElement('div');
+        lb.className = 'dim-label';
+        lb.textContent = label;
+        Object.assign(lb.style, {
+          position: posFixed ? 'fixed' : 'absolute',
+          pointerEvents: 'none', zIndex: 8000,
+          left: ((x1+x2)/2) + 'px', top: sy + 'px'
+        });
+        document.body.appendChild(lb);
+        dimMarkers.push(lb);
+      }
+
+      function dimV(y1, y2, x, label, minY, posFixed) {
+        const sy1 = Math.max(minY || 0, y1);
+        if (y2 - sy1 < 40) return;
+        drawSVGLine(x, sy1, x, y2, false, posFixed);
+        const lb = document.createElement('div');
+        lb.className = 'dim-label';
+        lb.textContent = label;
+        Object.assign(lb.style, {
+          position: posFixed ? 'fixed' : 'absolute',
+          pointerEvents: 'none', zIndex: 8000,
+          left: x + 'px', top: ((sy1+y2)/2) + 'px'
+        });
+        document.body.appendChild(lb);
+        dimMarkers.push(lb);
+      }
+
+      function clearDims() {
+        dimMarkers.forEach(e => e.remove());
+        dimMarkers = [];
+        _svgDefs = null;
+        if (hotBox) { hotBox.el.classList.remove('dim-hot'); hotBox = null; }
+      }
+
+      // ── Draw dims for a hovered box ──────────────────────────────
+      // Each measurement gets its own lane to avoid overlap:
+      //   width  → above the box at top - 16
+      //   height → right of the box at right + 12
+      //   gap-top    → further left  (left - 28), dashed feel via offset x
+      //   gap-bottom → further right (right + 28)
+      //   gap-left   → further above (top - 30)
+      //   gap-right  → further below (bottom + 14)
+      function showDimsFor(entry) {
+        clearDims();
+        hotBox = entry;
+        entry.el.classList.add('dim-hot');
+
+        const posFixed = entry.useFixed;
+        // minY in the same coordinate space as the stored rect
+        const minY = posFixed
+          ? (mode === 'modal' ? modalBarH() : 0)
+          : (mode === 'modal' ? modalBarH() : navH() + window.scrollY);
+
+        const r = entry.r;
+
+        // Own width — lane: above box
+        dimH(r.left, r.right, r.top - 18, px(r.width), minY, posFixed);
+        // Own height — lane: right of box
+        dimV(r.top, r.bottom, r.right + 12, px(r.height), minY, posFixed);
+
+        // Gap lines — nearest neighbour in each direction (same coordinate space)
+        let nearTop = null, nearBottom = null, nearLeft = null, nearRight = null;
+        let dT = Infinity, dB = Infinity, dL = Infinity, dR = Infinity;
+
+        boxList.forEach(b => {
+          if (b === entry || b.useFixed !== posFixed) return; // only compare same space
+          const br = b.r;
+          const hOverlap = r.left < br.right  && r.right  > br.left;
+          const vOverlap = r.top  < br.bottom && r.bottom > br.top;
+          if (hOverlap) {
+            if (br.bottom <= r.top    && r.top   - br.bottom < dT) { dT = r.top    - br.bottom; nearTop    = br.bottom; }
+            if (br.top    >= r.bottom && br.top  - r.bottom  < dB) { dB = br.top   - r.bottom;  nearBottom = br.top;    }
+          }
+          if (vOverlap) {
+            if (br.right  <= r.left   && r.left  - br.right  < dL) { dL = r.left  - br.right;   nearLeft   = br.right;  }
+            if (br.left   >= r.right  && br.left - r.right   < dR) { dR = br.left - r.right;    nearRight  = br.left;   }
+          }
+        });
+
+        if (nearTop    !== null && dT > 1) dimV(nearTop,    r.top,      r.left + r.width  * 0.25, px(dT), minY, posFixed);
+        if (nearBottom !== null && dB > 1) dimV(r.bottom,   nearBottom, r.left + r.width  * 0.75, px(dB), minY, posFixed);
+        if (nearLeft   !== null && dL > 1) dimH(nearLeft,   r.left,     r.top  + r.height * 0.25, px(dL), minY, posFixed);
+        if (nearRight  !== null && dR > 1) dimH(r.right,    nearRight,  r.top  + r.height * 0.75, px(dR), minY, posFixed);
+      }
+
+      // ── Find closest box to mouse cursor ─────────────────────────
+      // mx/my are viewport coords. Fixed rects are viewport-space;
+      // absolute rects are document-space (need scrollY offset).
+      function closestBox(mx, my) {
+        const docY = my + window.scrollY;
+
+        function testY(b) { return b.useFixed ? my : docY; }
+
+        // First pass: smallest box containing the cursor
+        let best = null, bestArea = Infinity;
+        boxList.forEach(b => {
+          const r = b.r;
+          const ty = testY(b);
+          if (mx >= r.left && mx <= r.right && ty >= r.top && ty <= r.bottom) {
+            const area = r.width * r.height;
+            if (area < bestArea) { bestArea = area; best = b; }
+          }
+        });
+        if (best) return { box: best, dist: 0 };
+
+        // Second pass: nearest centre
+        let bestDist = Infinity;
+        boxList.forEach(b => {
+          const r  = b.r;
+          const ty = testY(b);
+          const cx = r.left + r.width  / 2;
+          const cy = r.top  + r.height / 2;
+          const d  = Math.hypot(mx - cx, ty - cy);
+          if (d < bestDist) { bestDist = d; best = b; }
+        });
+        return { box: best, dist: bestDist };
+      }
+
+      // ── Build all permanent boxes (debounced) ────────────────────
+      let _buildTimer = null;
+      function buildBoxes() {
+        clearAll();
+        if (mode === 'modal') buildModalBoxes();
+        else                  buildPageBoxes();
+      }
+      function buildBoxesDebounced() {
+        clearTimeout(_buildTimer);
+        _buildTimer = setTimeout(buildBoxes, 80);
+      }
+
+      function buildPageBoxes() {
+        const sy  = window.scrollY;
+        // navH() returns a viewport value; for fixed elements minY stays viewport-space.
+        const nYv = navH();          // viewport-space nav bottom (for fixed elements)
+        const nYd = nYv + sy;        // document-space nav bottom  (for absolute elements)
+
+        // NAV — position:fixed, so mark isFixed=true; minY is viewport-space
+        const nav = document.getElementById('nav');
+        if (nav) {
+          addBox(nav.getBoundingClientRect(), 'pad', 0, true);
+          nav.querySelectorAll('.nav-logo, .nav-links, #dark-toggle').forEach(el => {
+            addBox(el.getBoundingClientRect(), 'elem', 0, true);
+          });
+        }
+
+        // Helper: measure any element and store in document-space regardless
+        // of whether it's currently in the viewport
+        function pageBox(el, cls) {
+          if (!el) return;
+          const r = el.getBoundingClientRect();
+          addBox(r, cls, nYv); // minY in viewport-space; addBox adds sy internally
+        }
+
+        // HERO
+        const hero = document.getElementById('hero');
+        if (hero) {
+          pageBox(hero.querySelector('.hero-left'),  'pad');
+          pageBox(hero.querySelector('.hero-right'), 'pad');
+          ['.hero-title', '.hero-label', '.hero-sub', '.hero-about-links', '.hero-about-tags'].forEach(sel => {
+            pageBox(hero.querySelector(sel), 'elem');
+          });
+        }
+
+        // WORK
+        const work = document.getElementById('work');
+        if (work) {
+          pageBox(work.querySelector('.section-title'),  'elem');
+          pageBox(work.querySelector('.section-number'), 'elem');
+        }
+        document.querySelectorAll('.portfolio-item').forEach(item => {
+          ['.thumb', '.item-name', '.item-tag', '.item-desc'].forEach(sel => {
+            pageBox(item.querySelector(sel), 'elem');
+          });
+        });
+
+        // CONTACT
+        const contact = document.getElementById('contact');
+        if (contact) {
+          pageBox(contact.querySelector('.section-title'),  'elem');
+          pageBox(contact.querySelector('.section-number'), 'elem');
+          ['.contact-heading', '.contact-note', '.contact-links'].forEach(sel => {
+            pageBox(contact.querySelector(sel), 'elem');
+          });
+          const frm = contact.querySelector('.contact-form');
+          if (frm) {
+            pageBox(frm, 'pad');
+            frm.querySelectorAll('.form-row').forEach(row => pageBox(row, 'elem'));
+          }
+        }
+
+        // FOOTER
+        const footer = document.querySelector('footer');
+        if (footer) {
+          footer.querySelectorAll('span, a, button').forEach(el => pageBox(el, 'elem'));
+        }
+      }
+
+      function buildModalBoxes() {
+        const mY  = modalBarH();
+        const vH  = window.innerHeight;
+        const modal = document.getElementById('modal');
+        if (!modal || !modal.classList.contains('open')) return;
+
+        const bar = modal.querySelector('.modal-bar');
+        if (bar) {
+          addBox(bar.getBoundingClientRect(), 'pad', 0);
+          ['.modal-logo', '#modal-bar-label', '#modal-close'].forEach(sel => {
+            const el = modal.querySelector(sel);
+            if (el) addBox(el.getBoundingClientRect(), 'elem', 0);
+          });
+        }
+        const info = modal.querySelector('.modal-info');
+        if (info) {
+          addBox(info.getBoundingClientRect(), 'pad', mY);
+          ['#modal-tag', '#modal-title', '#modal-desc', '#modal-meta', '.modal-nav-row'].forEach(sel => {
+            const el = modal.querySelector(sel);
+            if (el) addBox(el.getBoundingClientRect(), 'elem', mY);
+          });
+          modal.querySelectorAll('.modal-meta-row').forEach(row => addBox(row.getBoundingClientRect(), 'elem', mY));
+        }
+        const images = document.getElementById('modal-images');
+        if (images) {
+          addBox(images.getBoundingClientRect(), 'pad', mY);
+          images.querySelectorAll('.modal-img-block').forEach(blk => {
+            const r = blk.getBoundingClientRect();
+            if (r.height > 2) addBox(r, 'elem', mY);
+          });
+        }
+      }
+
+      function clearAll() {
+        clearDims();
+        boxList.forEach(b => b.el.remove());
+        boxList = [];
+      }
+
+      // ── Mouse: crosshair + nearest-box dims ──────────────────────
+      const HOVER_RADIUS = 120; // px — show dims when cursor within this distance of box centre
+
+      document.addEventListener('mousemove', e => {
+        if (!active) return;
+
+        // Crosshair
+        crossH.style.top  = e.clientY + 'px';
+        crossV.style.left = e.clientX + 'px';
+
+        // Coordinate readout
+        const ox = e.clientX + 16, oy = e.clientY + 16;
+        const cw = coords.offsetWidth  || 90;
+        const ch = coords.offsetHeight || 18;
+        coords.style.left = (ox + cw > window.innerWidth  ? e.clientX - cw - 8 : ox) + 'px';
+        coords.style.top  = (oy + ch > window.innerHeight ? e.clientY - ch - 8 : oy) + 'px';
+        coords.textContent = e.clientX + ', ' + e.clientY;
+
+        // Find closest box; show dims if within radius
+        const { box: nearest, dist } = closestBox(e.clientX, e.clientY);
+        if (nearest && dist < HOVER_RADIUS) {
+          if (nearest !== hotBox) showDimsFor(nearest);
+        } else {
+          if (hotBox) clearDims();
+        }
+      });
+
+      // ── Toggle ───────────────────────────────────────────────────
+      function toggle() {
+        active = !active;
+        crossH.style.display = active ? 'block' : 'none';
+        crossV.style.display = active ? 'block' : 'none';
+        coords.style.display = active ? 'block' : 'none';
+        if (active) { buildBoxes(); showToast('Dimension mode ON — D to exit'); }
+        else        { clearAll();   showToast('Dimension mode OFF', 1500); }
+      }
+
+      function showToast(msg) {
+        toast.textContent = msg;
+        toast.classList.add('show');
+        // setTimeout(() => toast.classList.remove('show'), 2500); //
+      }
+
+      function showToast(msg, duration = 0) {
+        toast.textContent = msg;
+        toast.classList.add('show');
+        if (duration) setTimeout(() => toast.classList.remove('show'), duration);
+      }
+
+      // ── Modal observer ───────────────────────────────────────────
+      const modalEl = document.getElementById('modal');
+      if (modalEl) {
+        new MutationObserver(() => {
+          const next = modalEl.classList.contains('open') ? 'modal' : 'page';
+          if (next !== mode) { mode = next; if (active) buildBoxesDebounced(); }
+        }).observe(modalEl, { attributes: true, attributeFilter: ['class'] });
+      }
+
+      const modalImages = document.getElementById('modal-images');
+      if (modalImages) {
+        let _mTick = false;
+        modalImages.addEventListener('scroll', () => {
+          if (!active || mode !== 'modal') return;
+          if (_mTick) return;
+          _mTick = true;
+          requestAnimationFrame(() => { buildBoxes(); _mTick = false; });
+        }, { passive: true });
+      }
+      window.addEventListener('resize', () => { if (active) buildBoxesDebounced(); });
+
+      // Rebuild after scroll settles so boxes stay accurate if D was pressed
+      // while the page was already scrolled.
+      let _scrollRebuildTimer = null;
+      window.addEventListener('scroll', () => {
+        if (!active || mode === 'modal') return;
+        clearTimeout(_scrollRebuildTimer);
+        _scrollRebuildTimer = setTimeout(() => {
+          if (active && mode !== 'modal') buildBoxes();
+        }, 150);
+      }, { passive: true });
+      document.addEventListener('keydown', e => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        if (e.key === 'd' || e.key === 'D') toggle();
+      });
+    })();
+    // ══ END DIMENSION MODE ════════════════════════════════════════
+
+
+    // ══ RULER ═════════════════════════════════════════════════════
+    (function () {
+      const MAJOR_DIV = 10;   // minor ticks per major (major every 10%)
+      const MINOR_CT  = 50;   // total minor ticks (every 2%)
+      const MAJOR_LEN = 10;   // px tick length for major
+      const MINOR_LEN = 5;    // px tick length for minor
+      const BLOCK_H   = 28;   // px height of sliding block
+
+      // ── Draw ruler ticks onto a canvas ─────────────────────────
+      // ticks are evenly spaced 0–100%, labelled at every 10%
+      function drawRuler(canvas, side) {
+        const dpr = window.devicePixelRatio || 1;
+        const h   = canvas.height;
+        const w   = canvas.width;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, w, h);
+
+        // Always read --fg fresh (respects dark mode)
+        const fg = getComputedStyle(document.body)
+                     .getPropertyValue('--fg').trim() || '#473F34';
+        ctx.strokeStyle = fg;
+        ctx.fillStyle   = fg;
+        ctx.lineWidth   = 1 * dpr;
+        ctx.font        = `${6 * dpr}px 'DM Mono', monospace`;
+        ctx.textAlign   = side === 'right' ? 'right' : 'left';
+
+        for (let i = 0; i <= MINOR_CT; i++) {
+          const pct      = i / MINOR_CT;
+          const y        = Math.round(pct * (h / dpr - 1)) * dpr;
+          const isMajor  = i % MAJOR_DIV === 0;
+          const tickLen  = (isMajor ? MAJOR_LEN : MINOR_LEN) * dpr;
+
+          ctx.beginPath();
+          if (side === 'right') { ctx.moveTo(w, y); ctx.lineTo(w - tickLen, y); }
+          else                  { ctx.moveTo(0, y); ctx.lineTo(tickLen, y); }
+          ctx.stroke();
+
+          if (isMajor) {
+            const label = (pct * 100).toFixed(0);
+            const tx = side === 'right' ? w - MAJOR_LEN * dpr - 2 * dpr
+                                        : MAJOR_LEN * dpr + 2 * dpr;
+            ctx.fillText(label, tx, y - 2 * dpr);
+          }
+        }
+
+        // Spine line
+        ctx.beginPath();
+        if (side === 'right') { ctx.moveTo(w - 0.5*dpr, 0); ctx.lineTo(w - 0.5*dpr, h); }
+        else                  { ctx.moveTo(0.5*dpr, 0);      ctx.lineTo(0.5*dpr, h); }
+        ctx.stroke();
+      }
+
+      // ── Draggable scrollbar setup ───────────────────────────────
+      function makeDraggable(block, rulerEl, onDrag) {
+        let dragging = false, startY = 0, startTop = 0;
+
+        block.addEventListener('mousedown', e => {
+          dragging  = true;
+          startY    = e.clientY;
+          startTop  = parseInt(block.style.top) || 0;
+          block.style.transition = 'none';
+          e.preventDefault();
+        });
+        document.addEventListener('mousemove', e => {
+          if (!dragging) return;
+          const trackH  = rulerEl.clientHeight - BLOCK_H;
+          const newTop  = Math.max(0, Math.min(trackH, startTop + (e.clientY - startY)));
+          const frac    = trackH > 0 ? newTop / trackH : 0;
+          block.style.top = newTop + 'px';
+          onDrag(frac);
+        });
+        document.addEventListener('mouseup', () => {
+          if (dragging) { dragging = false; block.style.transition = ''; }
+        });
+      }
+
+      // ── Setup a ruler (page or modal) ───────────────────────────
+      function setupRuler({ canvas, block, rulerEl, getScrollPx, getScrollMax, setScroll, side }) {
+        function resize() {
+          const dpr = window.devicePixelRatio || 1;
+          const h   = rulerEl.clientHeight;
+          const w   = rulerEl.clientWidth;
+          canvas.width  = w * dpr;
+          canvas.height = h * dpr;
+          canvas.style.width  = w + 'px';
+          canvas.style.height = h + 'px';
+          drawRuler(canvas, side);
+        }
+
+        function update() {
+          const scrollPx = getScrollPx();
+          const maxPx    = getScrollMax();
+          const viewH    = rulerEl.clientHeight;
+          const frac     = maxPx > 0 ? scrollPx / maxPx : 0;
+          const trackH   = viewH - BLOCK_H;
+          block.style.top     = Math.round(frac * trackH) + 'px';
+          block.textContent   = Math.round(frac * 100) + '%';
+        }
+
+        makeDraggable(block, rulerEl, frac => setScroll(frac));
+
+        resize();
+        update();
+        return { resize, update };
+      }
+
+      // ── PAGE ruler ──────────────────────────────────────────────
+      const pageRulerEl = document.getElementById('page-ruler');
+      const pageCanvas  = document.getElementById('page-ruler-canvas');
+      const pageBlock   = document.getElementById('page-ruler-block');
+
+      const page = setupRuler({
+        canvas:       pageCanvas,
+        block:        pageBlock,
+        rulerEl:      pageRulerEl,
+        getScrollPx:  () => window.scrollY,
+        getScrollMax: () => document.documentElement.scrollHeight - window.innerHeight,
+        setScroll:    frac => {
+          const max = document.documentElement.scrollHeight - window.innerHeight;
+          window.scrollTo({ top: frac * max, behavior: 'instant' });
+        },
+        side: 'right'
+      });
+
+      window.addEventListener('scroll', page.update, { passive: true });
+      window.addEventListener('resize', () => { page.resize(); page.update(); });
+
+      // ── Hide page ruler when modal is open ───────────────────────
+      const modalEl = document.getElementById('modal');
+      if (modalEl) {
+        new MutationObserver(() => {
+          const isOpen = modalEl.classList.contains('open');
+          pageRulerEl.classList.toggle('hidden', isOpen);
+        }).observe(modalEl, { attributes: true, attributeFilter: ['class'] });
+      }
+
+      // ── MODAL ruler ─────────────────────────────────────────────
+      const modalRulerEl = document.getElementById('modal-ruler');
+      const modalCanvas  = document.getElementById('modal-ruler-canvas');
+      const modalBlock   = document.getElementById('modal-ruler-block');
+      const modalImages  = document.getElementById('modal-images');
+
+      let modalRuler = null;
+      let infoRuler  = null;
+
+      const modalInfoEl       = document.getElementById('modal-info');
+      const modalInfoRulerEl  = document.getElementById('modal-info-ruler');
+      const modalInfoCanvas   = document.getElementById('modal-info-ruler-canvas');
+      const modalInfoBlock    = document.getElementById('modal-info-ruler-block');
+
+      function initModalRuler() {
+        if (modalRuler) return;
+        modalRuler = setupRuler({
+          canvas:       modalCanvas,
+          block:        modalBlock,
+          rulerEl:      modalRulerEl,
+          getScrollPx:  () => modalImages.scrollTop,
+          getScrollMax: () => modalImages.scrollHeight - modalImages.clientHeight,
+          setScroll:    frac => {
+            const max = modalImages.scrollHeight - modalImages.clientHeight;
+            modalImages.scrollTop = frac * max;
+          },
+          side: 'right'
+        });
+        modalImages.addEventListener('scroll', modalRuler.update, { passive: true });
+      }
+
+      function initInfoRuler() {
+        if (infoRuler) return;
+        if (!modalInfoEl || !modalInfoRulerEl) return;
+        infoRuler = setupRuler({
+          canvas:       modalInfoCanvas,
+          block:        modalInfoBlock,
+          rulerEl:      modalInfoRulerEl,
+          getScrollPx:  () => modalInfoEl.scrollTop,
+          getScrollMax: () => modalInfoEl.scrollHeight - modalInfoEl.clientHeight,
+          setScroll:    frac => {
+            const max = modalInfoEl.scrollHeight - modalInfoEl.clientHeight;
+            modalInfoEl.scrollTop = frac * max;
+          },
+          side: 'left'
+        });
+        modalInfoEl.addEventListener('scroll', infoRuler.update, { passive: true });
+      }
+
+      // Init/redraw when modal opens
+      if (modalEl) {
+        new MutationObserver(() => {
+          if (modalEl.classList.contains('open')) {
+            setTimeout(() => {
+              initModalRuler();
+              modalRuler.resize();
+              modalRuler.update();
+              initInfoRuler();
+              infoRuler.resize();
+              infoRuler.update();
+            }, 80);
+          }
+        }).observe(modalEl, { attributes: true, attributeFilter: ['class'] });
+      }
+
+      window.addEventListener('resize', () => {
+        page.resize(); page.update();
+        if (modalEl && modalEl.classList.contains('open')) {
+          if (modalRuler) { modalRuler.resize(); modalRuler.update(); }
+          if (infoRuler)  { infoRuler.resize();  infoRuler.update();  }
+        }
+      });
+
+      // Redraw ticks on dark mode toggle (--fg color changes)
+      const darkToggle = document.getElementById('dark-toggle');
+      if (darkToggle) {
+        darkToggle.addEventListener('click', () => {
+          requestAnimationFrame(() => {
+            page.resize();
+            if (modalEl && modalEl.classList.contains('open')) {
+              if (modalRuler) modalRuler.resize();
+              if (infoRuler)  infoRuler.resize();
+            }
+          });
+        });
+      }
+    })();
+    // ══ END RULER ═════════════════════════════════════════════════
+
+    // ══ LIGHTBOX ══════════════════════════════════════════════════
+    (function () {
+      const lb        = document.getElementById('lightbox');
+      const lbImg     = document.getElementById('lightbox-img');
+      const lbVideo   = document.getElementById('lightbox-video');
+      const lbPrev    = document.getElementById('lb-prev');
+      const lbNext    = document.getElementById('lb-next');
+      const lbClose   = document.getElementById('lb-close');
+      const lbCounter = document.getElementById('lb-counter');
+      const lbHint    = document.getElementById('lb-hint');
+
+      // Each entry: { type: 'img'|'video', src: string }
+      let items   = [];
+      let current = 0;
+      let hintShown = false;
+
+      function getModalItems() {
+        const results = [];
+        document.querySelectorAll('#modal-images .modal-img-block').forEach(block => {
+          // images
+          block.querySelectorAll('img').forEach(img => {
+            results.push({ type: 'img', src: img.src });
+          });
+          // iframes (videos) — extract just the video ID for a clean embed
+          block.querySelectorAll('iframe').forEach(iframe => {
+            results.push({ type: 'video', src: iframe.src });
+          });
+        });
+        return results;
+      }
+
+      window.lbOpen = function (clickedSrc) {
+        items   = getModalItems();
+        current = items.findIndex(it => it.src === clickedSrc);
+        if (current < 0) current = 0;
+        render();
+        lb.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        if (!hintShown) {
+          hintShown = true;
+          lbHint.style.opacity = '1';
+          setTimeout(() => lbHint.classList.add('fade'), 2400);
+        } else {
+          lbHint.style.opacity = '0';
+        }
+      };
+
+      // Also allow opening a video directly by src
+      window.lbOpenVideo = function (videoSrc) {
+        items   = getModalItems();
+        current = items.findIndex(it => it.src === videoSrc);
+        if (current < 0) current = 0;
+        render();
+        lb.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      };
+
+      function render() {
+        const item = items[current];
+        if (!item) return;
+        if (item.type === 'video') {
+          lbImg.style.display   = 'none';
+          lbVideo.style.display = 'block';
+          // Add autoplay to the lightbox embed
+          lbVideo.src = item.src.replace('youtube.com/embed/', 'youtube.com/embed/').split('?')[0] + '?autoplay=1';
+        } else {
+          lbImg.style.display   = 'block';
+          lbVideo.style.display = 'none';
+          lbVideo.src = ''; // stop any playing video
+          lbImg.src   = item.src;
+        }
+        lbCounter.textContent = items.length > 1 ? (current + 1) + ' / ' + items.length : '';
+        lbPrev.classList.toggle('hidden', current === 0);
+        lbNext.classList.toggle('hidden', current === items.length - 1);
+      }
+
+      function close() {
+        lb.classList.remove('open');
+        lbVideo.src = ''; // stop video playback
+        document.body.style.overflow = '';
+      }
+
+      function step(dir) {
+        const n = current + dir;
+        if (n >= 0 && n < items.length) { current = n; render(); }
+      }
+
+      lbClose.addEventListener('click', close);
+      lbPrev.addEventListener('click',  () => step(-1));
+      lbNext.addEventListener('click',  () => step(1));
+
+      lb.addEventListener('click', e => {
+        if (e.target === lb || e.target === lbImg) close();
+      });
+
+      document.addEventListener('keydown', e => {
+        if (!lb.classList.contains('open')) return;
+        if (e.key === 'Escape')     { e.stopImmediatePropagation(); close(); }
+        if (e.key === 'ArrowLeft')  { e.stopImmediatePropagation(); step(-1); }
+        if (e.key === 'ArrowRight') { e.stopImmediatePropagation(); step(1); }
+      }, true);
+    })();
+    // ══ END LIGHTBOX ══════════════════════════════════════════════
+  </script>
+</body>
+</html>
